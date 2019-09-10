@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @StepScope
-public class PrimePostItemReader implements ItemReader<PrimePostData> {
+public class PrimePostsViaParametersReader implements ItemReader<PrimePostData> {
 
     @Value("#{jobParameters['postData']}")
     private String data;
