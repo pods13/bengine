@@ -1,0 +1,13 @@
+{{#isEq mission.name "Hydron"}}
+    <p>For <b>{{join relicNames delimiter="/"}} Relics</b>, my recommendation is
+        <b>{{mission.name}} on {{mission.planet}}</b>. It is the fastest way to farm for {{era}}
+        relics because {{era}} relics drop every 5 rounds. Also, it worth mentioned that
+        {{mission.name}} is the best area to level up your Warframe and weapons. So, don't forget to
+        bring alongside your weapons that you want to level up.</p>
+{{/isEq}}
+{{#isEq mission.name "Belenus"}}
+    <p>For <b>{{join relicNames delimiter="/"}} Relics</b>, my recommendation is
+        <b>{{mission.name}} in the {{mission.planet}}</b>. {{mission.name}} is a straightforward
+        defense mission best attempted with a team and you should be able to get two Neo relics
+        in ten waves most of the time(or one Meso and one Neo).</p>
+{{/isEq}}

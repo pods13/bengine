@@ -1,0 +1,24 @@
+<p>Hey guys. And the <strong>{{ name }}</strong> along with
+    {{& join alongWithPrimeItems delimiter=" and " lambda=toPrimeItemLink}}
+    have been retired(vaulted) from the Warframe reward tables.</p><!--more-->
+<h2>{{name}} Vaulted</h2>
+<p>Now, if you've joined fairly recently there's a pretty good chance you have never experienced
+    the vaulting. So, what it did is remove the relics that would drop parts for the {{name}} from
+    the drop table. So, currently {{name}} is inaccessible for some period of time. An important
+    thing to remember here though is that while {{name}} relics were moved over to the Prime Vault
+    and made inaccessible, any relics that were acquired before these items were moved into the
+    Prime Vault will stay.</p>
+<h2>How To Get {{name}}</h2>
+<p>So, first things first, check the presence of the following relics in your Void Relic Refinement:</p>
+<ul>
+    {{#each itemPartsToAllRelics.entrySet}}
+        <li>
+            <b>{{join value delimiter=", "}}</b> that drop{{#isEq value.size 1}}s{{/isEq}} {{key}}
+        </li>
+    {{/each}}
+</ul>
+<p>If you don't have any of them then either you could buy {{name}} Relics from other players or wait
+    until the {{name}} eventually returns when the Prime Vault opens again.</p>
+
+<p>And that’s pretty much all I want to say about <strong>How To Get {{name}}</strong>.
+    I hope this guide helped and let's hope {{name}} will be unvaulted again soon. Bye-bye.</p>

@@ -1,0 +1,13 @@
+{{#isNotNull mentionedIn}}
+    <p>
+        {{#switch index}}
+            {{#case 1 break="true"}}
+                You
+            {{/case}}
+            {{#default}}
+                Besides that, you
+            {{/default}}
+        {{/switch}} can get it by opening <b>{{join relicNames delimiter="/"}}</b> Relics.
+        To farm these relics, I suggest you go to the same mission which I've already
+        mentioned in <em>How To Get {{join mentionedIn delimiter=" & "}} Relics</em> section.</p>
+{{/isNotNull}}

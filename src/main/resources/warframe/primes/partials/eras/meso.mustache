@@ -1,0 +1,10 @@
+{{#isEq mission.name "Io"}}
+    <p>In order to farm <b>{{join relicNames delimiter="/"}} Relics</b> , I would recommend
+        <b>{{mission.name}} on {{mission.planet}}</b>. This mission can be completed really quickly
+        and with some luck, you should be able to get two Meso relics in 10 waves.</p>
+{{/isEq}}
+{{#isEq mission.name "Ukko"}}
+    <p>In order to farm <b>{{join relicNames delimiter="/"}} Relics</b>, I would recommend
+        <b>{{mission.name}} in the {{mission.planet}}</b>. It's a capture mission and can be completed
+        really quickly.</p>
+{{/isEq}}

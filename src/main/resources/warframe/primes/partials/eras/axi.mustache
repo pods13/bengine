@@ -1,0 +1,12 @@
+{{#isEq mission.name "Xini"}}
+    <p>For <b>{{join relicNames delimiter="/"}} Relics Farming</b> I would recommend
+        <b>{{mission.name}} on {{mission.planet}}</b>. It's an interception mission that's pretty
+        straightforward. The first two rounds drop Neo relics and rounds 3 and 4 regularly dropping
+        {{era}} relics. Optimally you want to stay four rounds before extracting.</p>
+    <p>{{mission.name}} also has a high Neurodes drop, so be sure to keep an eye for
+        <a href="/warframe-neurodes-farming/" title="Warframe Neurodes Farming">Neurodes</a></p>
+{{/isEq}}
+{{#isEq mission.name "Marduk"}}
+    <p>You can obtain <b>{{join relicNames delimiter="/"}}</b> Relics from {{mission.name}} - a sabotage mission.
+        This mission has a chance to drop Neo relics as well.</p>
+{{/isEq}}

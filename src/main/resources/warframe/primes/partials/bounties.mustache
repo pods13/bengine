@@ -1,0 +1,20 @@
+{{#isNotEq relicsByBountyTiers.size 0}}
+    <h2>Farming {{name}} Relics in Bounties</h2>
+    <p>Bounties are a fantastic way to get relics as well. You can take up the bounties from Cetus
+        or <a href="/fortuna/" title="Warframe Fortuna">Fortuna</a>. Both will yield almost
+        similar results.
+        {{#each relicsByBountyTiers.entrySet}}
+            {{#switch index}}
+                {{#case 1 break="true"}}
+                        With <b>tier {{key}} bounties</b> granting <b>{{value}} relics</b>
+                    {{#isEq key tier.values.0}} (only Fortuna's Bounty){{/isEq}},
+                {{/case}}
+                {{#case relicsByBountyTiers.size break="true"}}
+                        and <b>tier {{key}} bounties</b> dropping <b>{{value}} relics</b>.
+                {{/case}}
+                {{#default}}
+                        <b>tier {{key}} bounties</b> granting <b>{{value}} relics</b>,
+                {{/default}}
+            {{/switch}}
+        {{/each}}
+{{/isNotEq}}
