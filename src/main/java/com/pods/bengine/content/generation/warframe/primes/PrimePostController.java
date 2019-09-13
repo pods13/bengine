@@ -12,6 +12,7 @@ import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,25 +21,29 @@ import org.springframework.web.bind.annotation.RestController;
 public class PrimePostController {
 
     private final JobLauncher jobLauncher;
-    private final Job singlePrimePostGenerationJob;
+    private final Job trioPrimePostsGenerationJob;
 
-    public PrimePostController(JobLauncher jobLauncher, Job singlePrimePostGenerationJob) {
+    public PrimePostController(JobLauncher jobLauncher, Job trioPrimePostsGenerationJob) {
         this.jobLauncher = jobLauncher;
-        this.singlePrimePostGenerationJob = singlePrimePostGenerationJob;
+        this.trioPrimePostsGenerationJob = trioPrimePostsGenerationJob;
     }
 
     @PostMapping
     @ResponseBody
-    public void createPrimePost(@RequestBody PrimePostData postData) {
+    public void createPrimePost(@RequestParam String primedItems, @RequestParam String status,
+                                @RequestParam(defaultValue = "true") boolean draft) {
+        //TODO add validation for primedItems data
         JobParameters jobParameters = new JobParametersBuilder()
-                .addString("postData", new Gson().toJson(postData))
+                .addString("items", primedItems)
+                .addString("status", status)
+                .addString("draft", Boolean.toString(draft))
                 .toJobParameters();
 
         try {
-            jobLauncher.run(singlePrimePostGenerationJob, jobParameters);
+            jobLauncher.run(trioPrimePostsGenerationJob, jobParameters);
         } catch (JobExecutionAlreadyRunningException | JobRestartException
                 | JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 }

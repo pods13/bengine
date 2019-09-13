@@ -1,9 +1,9 @@
 package com.pods.bengine.config.batch;
 
 import com.pods.bengine.content.generation.warframe.primes.PrimePostData;
-import com.pods.bengine.content.generation.warframe.primes.job.PrimePostItemReader;
-import com.pods.bengine.content.generation.warframe.primes.job.PrimePostListItemReader;
-import com.pods.bengine.content.generation.warframe.primes.job.PrimePostListItemWriter;
+import com.pods.bengine.content.generation.warframe.primes.job.PrimePostsViaJobParametersReader;
+import com.pods.bengine.content.generation.warframe.primes.job.PrimePostsOnGithubReader;
+import com.pods.bengine.content.generation.warframe.primes.job.PrimePostsWriter;
 import com.pods.bengine.content.generation.warframe.primes.job.PrimePostsGenerationProcessor;
 import com.pods.bengine.content.post.warframe.primes.PrimePost;
 import com.pods.bengine.content.post.warframe.primes.PrimePostFactory;
@@ -19,20 +19,20 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class PrimePostsGenerationJobConfig {
 
-    private final PrimePostListItemReader primePostListItemReader;
+    private final PrimePostsOnGithubReader primePostsOnGithubReader;
     private final PrimePostsGenerationProcessor primePostsGenerationProcessor;
-    private final PrimePostListItemWriter primePostListItemWriter;
+    private final PrimePostsWriter primePostsWriter;
 
-    private final PrimePostItemReader primePostItemReader;
+    private final PrimePostsViaJobParametersReader primePostsViaJobParametersReader;
 
-    public PrimePostsGenerationJobConfig(PrimePostListItemReader primePostListItemReader,
+    public PrimePostsGenerationJobConfig(PrimePostsOnGithubReader primePostsOnGithubReader,
                                          PrimePostsGenerationProcessor primePostsGenerationProcessor,
-                                         PrimePostListItemWriter primePostListItemWriter,
-                                         PrimePostItemReader primePostItemReader) {
-        this.primePostListItemReader = primePostListItemReader;
+                                         PrimePostsWriter primePostsWriter,
+                                         PrimePostsViaJobParametersReader primePostsViaJobParametersReader) {
+        this.primePostsOnGithubReader = primePostsOnGithubReader;
         this.primePostsGenerationProcessor = primePostsGenerationProcessor;
-        this.primePostListItemWriter = primePostListItemWriter;
-        this.primePostItemReader = primePostItemReader;
+        this.primePostsWriter = primePostsWriter;
+        this.primePostsViaJobParametersReader = primePostsViaJobParametersReader;
     }
 
     @Bean
@@ -46,26 +46,26 @@ public class PrimePostsGenerationJobConfig {
     public Step generatePrimePostsStep(StepBuilderFactory stepBuilderFactory) {
         return stepBuilderFactory.get("generatePrimePostsStep")
                 .<PrimePostData, PrimePost>chunk(5)
-                .reader(primePostListItemReader)
+                .reader(primePostsOnGithubReader)
                 .processor(primePostsGenerationProcessor)
-                .writer(primePostListItemWriter)
+                .writer(primePostsWriter)
                 .build();
     }
 
     @Bean
-    public Job singlePrimePostGenerationJob(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory) {
-        return jobBuilderFactory.get("singlePrimePostGenerationJob")
-                .start(generateSinglePrimePostStep(stepBuilderFactory))
+    public Job trioPrimePostsGenerationJob(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory) {
+        return jobBuilderFactory.get("trioPrimePostsGenerationJob")
+                .start(generateTrioPrimePostsStep(stepBuilderFactory))
                 .build();
     }
 
     @Bean
-    public Step generateSinglePrimePostStep(StepBuilderFactory stepBuilderFactory) {
-        return stepBuilderFactory.get("generateSinglePrimePostStep")
-                .<PrimePostData, PrimePost>chunk(1)
-                .reader(primePostItemReader)
+    public Step generateTrioPrimePostsStep(StepBuilderFactory stepBuilderFactory) {
+        return stepBuilderFactory.get("generateTrioPrimePostsStep")
+                .<PrimePostData, PrimePost>chunk(3)
+                .reader(primePostsViaJobParametersReader)
                 .processor(primePostsGenerationProcessor)
-                .writer(primePostListItemWriter)
+                .writer(primePostsWriter)
                 .build();
     }
 

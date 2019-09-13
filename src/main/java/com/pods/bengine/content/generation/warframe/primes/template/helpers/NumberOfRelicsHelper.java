@@ -12,7 +12,7 @@ public class NumberOfRelicsHelper extends BasicValueHelper {
 
     @Override
     public void execute(Options options) {
-        Map<String, Set<String>> itemPartsToRelics = (Map<String, Set<String>>) options.getParameters().get(0);
+        Map<String, Collection<String>> itemPartsToRelics = (Map<String, Collection<String>>) options.getParameters().get(0);
         long numberOfRelics = itemPartsToRelics.values().stream()
                 .mapToLong(Collection::size)
                 .sum();

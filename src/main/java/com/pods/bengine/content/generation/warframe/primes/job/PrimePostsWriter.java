@@ -13,12 +13,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-public class PrimePostListItemWriter implements ItemWriter<PrimePost> {
+public class PrimePostsWriter implements ItemWriter<PrimePost> {
 
     private final GithubService githubService;
     private final PostWriter<PrimePost> postWriter;
 
-    public PrimePostListItemWriter(GithubService githubService, PostWriter<PrimePost> postWriter) {
+    public PrimePostsWriter(GithubService githubService, PostWriter<PrimePost> postWriter) {
         this.githubService = githubService;
         this.postWriter = postWriter;
     }

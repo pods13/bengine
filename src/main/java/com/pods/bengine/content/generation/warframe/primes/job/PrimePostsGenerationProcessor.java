@@ -50,7 +50,8 @@ public class PrimePostsGenerationProcessor implements ItemProcessor<PrimePostDat
     public PrimePost process(@NotNull PrimePostData postData) {
         return Stream.of(postData)
                 .filter(data -> Objects.nonNull(data.getItemName()))
-                .filter(this::isStatusChanged)
+                //TODO we should filter such posts only when it's running as a part of the updating job
+//                .filter(this::isStatusChanged)
                 .map(this::toGeneratedPrimeItem)
                 .map(this::generatePrimePost)
                 .findFirst()
@@ -78,6 +79,7 @@ public class PrimePostsGenerationProcessor implements ItemProcessor<PrimePostDat
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
         Map<Tier, String> relicRewardByBountyTiers = relicService.sortRelicNamesByBountyTiers(relicNames);
+
         return new GeneratedPrimeItem.Builder()
                 .addName(postData.getItemName())
                 .addNormalizedName(slugify.slugify(postData.getItemName()))

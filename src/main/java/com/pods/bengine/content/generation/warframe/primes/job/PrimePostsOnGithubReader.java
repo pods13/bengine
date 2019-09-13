@@ -18,14 +18,14 @@ import java.util.stream.Collectors;
 
 @Component
 @StepScope
-public class PrimePostListItemReader implements ItemReader<PrimePostData> {
+public class PrimePostsOnGithubReader implements ItemReader<PrimePostData> {
 
     private final GithubService githubService;
     private final PostReader<PrimePost> postReader;
 
     private List<PrimePostData> primePostData;
 
-    public PrimePostListItemReader(GithubService githubService, @Qualifier("primePostReader") PostReader<PrimePost> postReader) {
+    public PrimePostsOnGithubReader(GithubService githubService, @Qualifier("primePostReader") PostReader<PrimePost> postReader) {
         this.githubService = githubService;
         this.postReader = postReader;
     }

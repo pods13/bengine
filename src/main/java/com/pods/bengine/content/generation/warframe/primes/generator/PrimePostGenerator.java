@@ -1,7 +1,7 @@
 package com.pods.bengine.content.generation.warframe.primes.generator;
 
-import com.pods.bengine.content.generation.warframe.primes.template.GeneratedPrimeItem;
 import com.pods.bengine.content.generation.warframe.primes.status.PrimePostStatus;
+import com.pods.bengine.content.generation.warframe.primes.template.GeneratedPrimeItem;
 import com.pods.bengine.content.post.matter.Matter;
 import com.pods.bengine.content.post.warframe.primes.PrimePost;
 import com.pods.bengine.content.post.warframe.primes.PrimePostMatter;
@@ -34,7 +34,7 @@ public abstract class PrimePostGenerator {
     protected Matter generateFrontMatter(GeneratedPrimeItem primeItem) {
         PrimePostMatter matter = new PrimePostMatter();
         matter.setTitle("How To Get " + primeItem.getName());
-        matter.setDate(Date.valueOf(LocalDate.now().minusDays(0)));
+        matter.setDate(Date.valueOf(LocalDate.now().minusDays(5)));
         matter.setAuthor("warframe");
         matter.setLayout("post");
         matter.setPermalink("/primes/" + "how-to-get-" + primeItem.getNormalizedName() + "/");
