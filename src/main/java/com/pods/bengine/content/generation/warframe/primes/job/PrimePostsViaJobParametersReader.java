@@ -8,7 +8,6 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,21 +17,21 @@ import java.util.stream.Stream;
 @StepScope
 public class PrimePostsViaJobParametersReader implements ItemReader<PrimePostData> {
 
-    @Value("#{jobParameters['frame']}")
-    private String frame;
-
-    @Value("#{jobParameters['gear']}")
-    private String gear;
-
-    @Value("#{jobParameters['status']}")
-    private String status;
-
-    @Value("#{jobParameters['draft']}")
-    private String draft;
+    private final String frame;
+    private final String gear;
+    private final String status;
+    private final boolean draft;
 
     private List<PrimePostData> primePostData;
 
-    public PrimePostsViaJobParametersReader() {
+    public PrimePostsViaJobParametersReader(@Value("#{jobParameters['frame']}") String frame,
+                                            @Value("#{jobParameters['gear']}") String gear,
+                                            @Value("#{jobParameters['status']}") String status,
+                                            @Value("#{jobParameters['draft']}") String draft) {
+        this.frame = frame;
+        this.gear = gear;
+        this.status = status;
+        this.draft = Boolean.parseBoolean(draft);
         this.primePostData = new ArrayList<>();
     }
 
@@ -45,7 +44,7 @@ public class PrimePostsViaJobParametersReader implements ItemReader<PrimePostDat
             data.setGroupId(generateGroupId(frame));
             data.setItemName(primedItem);
             data.setStatus(PrimePostStatus.valueOf(status));
-            data.setDraft(Boolean.parseBoolean(draft));
+            data.setDraft(draft);
             List<String> alongWithItems = Stream.of(primedItems)
                     .filter(item -> !item.equals(primedItem))
                     .collect(Collectors.toList());
