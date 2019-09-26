@@ -8,6 +8,7 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,8 +18,11 @@ import java.util.stream.Stream;
 @StepScope
 public class PrimePostsViaJobParametersReader implements ItemReader<PrimePostData> {
 
-    @Value("#{jobParameters['items']}")
-    private String items;
+    @Value("#{jobParameters['frame']}")
+    private String frame;
+
+    @Value("#{jobParameters['gear']}")
+    private String gear;
 
     @Value("#{jobParameters['status']}")
     private String status;
@@ -34,9 +38,11 @@ public class PrimePostsViaJobParametersReader implements ItemReader<PrimePostDat
 
     @BeforeStep
     public void createPostDataByParameters() {
+        String items = String.join(",", frame, gear);
         String[] primedItems = items.split(",");
         for (String primedItem : primedItems) {
             PrimePostData data = new PrimePostData();
+            data.setGroupId(generateGroupId(frame));
             data.setItemName(primedItem);
             data.setStatus(PrimePostStatus.valueOf(status));
             data.setDraft(Boolean.parseBoolean(draft));
@@ -47,6 +53,11 @@ public class PrimePostsViaJobParametersReader implements ItemReader<PrimePostDat
 
             primePostData.add(data);
         }
+    }
+
+    private String generateGroupId(String frame) {
+        return String.join(" ", frame.toLowerCase(), "access")
+                .replace(" ", "-");
     }
 
 

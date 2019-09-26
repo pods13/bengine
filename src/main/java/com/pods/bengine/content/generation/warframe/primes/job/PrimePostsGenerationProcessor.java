@@ -80,16 +80,17 @@ public class PrimePostsGenerationProcessor implements ItemProcessor<PrimePostDat
                 .collect(Collectors.toSet());
         Map<Tier, String> relicRewardByBountyTiers = relicService.sortRelicNamesByBountyTiers(relicNames);
 
-        return new GeneratedPrimeItem.Builder()
-                .addName(postData.getItemName())
-                .addNormalizedName(slugify.slugify(postData.getItemName()))
-                .addStatus(postStatusResolver.resolve(postData, primeItemNameToAvailableRelics))
-                .addAlongWithPrimeItems(postData.getAlongWithPrimeItems())
-                .addItemPartsToAvailableRelics(itemPartsToAvailableRelics)
-                .addItemPartsToAllRelics(itemPartsToAllRelics)
-                .addItemPartFarmingLocations(itemPartFarmingLocations)
-                .addRelicsByBountyTiers(relicRewardByBountyTiers)
-                .addAsDraft(postData.isDraft())
+        return GeneratedPrimeItem.builder()
+                .groupId(postData.getGroupId())
+                .name(postData.getItemName())
+                .normalizedName(slugify.slugify(postData.getItemName()))
+                .status(postStatusResolver.resolve(postData, primeItemNameToAvailableRelics))
+                .alongWithPrimeItems(postData.getAlongWithPrimeItems().toArray(new String[]{}))
+                .itemPartsToAvailableRelics(itemPartsToAvailableRelics)
+                .itemPartsToAllRelics(itemPartsToAllRelics)
+                .itemPartFarmingLocations(itemPartFarmingLocations)
+                .relicsByBountyTiers(relicRewardByBountyTiers)
+                .draft(postData.isDraft())
                 .build();
     }
 

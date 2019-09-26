@@ -33,6 +33,7 @@ public abstract class PrimePostGenerator {
 
     protected Matter generateFrontMatter(GeneratedPrimeItem primeItem) {
         PrimePostMatter matter = new PrimePostMatter();
+        matter.setGroupId(primeItem.getGroupId());
         matter.setTitle("How To Get " + primeItem.getName());
         matter.setDate(Date.valueOf(LocalDate.now().minusDays(5)));
         matter.setAuthor("warframe");

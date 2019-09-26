@@ -7,9 +7,18 @@ import java.util.List;
 
 public class PrimePostMatter extends PostMatter {
 
+    private String groupId;
     private String itemName;
     private PrimePostStatus status;
     private List<String> alongWithPrimeItems;
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
 
     public String getItemName() {
         return itemName;

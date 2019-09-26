@@ -6,10 +6,19 @@ import java.util.List;
 
 public class PrimePostData {
 
+    private String groupId;
     private String itemName;
     private PrimePostStatus status;
     private boolean draft;
     private List<String> alongWithPrimeItems;
+
+    public String getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(String groupId) {
+        this.groupId = groupId;
+    }
 
     public String getItemName() {
         return itemName;

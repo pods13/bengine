@@ -1,6 +1,5 @@
 package com.pods.bengine.content.generation.warframe.primes;
 
-import com.google.gson.Gson;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
@@ -10,10 +9,8 @@ import org.springframework.batch.core.repository.JobExecutionAlreadyRunningExcep
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,12 +26,13 @@ public class PrimePostController {
     }
 
     @PostMapping
-    @ResponseBody
-    public void createPrimePost(@RequestParam String primedItems, @RequestParam String status,
+    public void createPrimePost(@RequestParam String frame, @RequestParam String gear,
+                                @RequestParam String status,
                                 @RequestParam(defaultValue = "true") boolean draft) {
-        //TODO add validation for primedItems data
+        //TODO add validation for frame/gear data
         JobParameters jobParameters = new JobParametersBuilder()
-                .addString("items", primedItems)
+                .addString("frame", frame)
+                .addString("gear", gear)
                 .addString("status", status)
                 .addString("draft", Boolean.toString(draft))
                 .toJobParameters();
