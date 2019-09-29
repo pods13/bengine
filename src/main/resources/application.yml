@@ -1,0 +1,8 @@
+spring:
+  batch:
+    job:
+      enabled: false
+  servlet:
+    multipart:
+      max-file-size: 30MB
+      max-request-size: 35MB
