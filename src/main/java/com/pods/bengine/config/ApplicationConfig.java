@@ -2,6 +2,7 @@ package com.pods.bengine.config;
 
 import com.github.slugify.Slugify;
 import com.pods.bengine.config.batch.BatchConfig;
+import com.pods.bengine.config.security.SecurityConfig;
 import com.pods.bengine.content.generation.warframe.primes.template.helpers.NumberOfRelicsHelper;
 import com.pods.bengine.content.post.warframe.primes.PrimePost;
 import com.pods.bengine.content.post.warframe.primes.PrimePostMatter;
@@ -25,7 +26,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @Configuration
-@Import({BatchConfig.class})
+@Import({BatchConfig.class, SecurityConfig.class})
 public class ApplicationConfig {
 
     private final Environment env;

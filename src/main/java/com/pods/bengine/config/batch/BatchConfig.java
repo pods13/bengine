@@ -11,4 +11,9 @@ import javax.sql.DataSource;
 @EnableBatchProcessing
 @Import({PrimePostsGenerationJobConfig.class})
 public class BatchConfig extends DefaultBatchConfigurer {
+
+    @Override
+    public void setDataSource(DataSource dataSource) {
+        // Skip persisting metadata to database
+    }
 }

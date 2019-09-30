@@ -17,7 +17,7 @@ import org.springframework.core.env.StandardEnvironment;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
+@SpringBootApplication()
 public class Application implements ApplicationRunner {
 
     @Value("${TINIFY_API_KEY}")
