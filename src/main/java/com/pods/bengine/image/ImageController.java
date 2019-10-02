@@ -2,8 +2,10 @@ package com.pods.bengine.image;
 
 import com.pods.bengine.github.GithubService;
 import com.pods.bengine.github.RepoData;
+import com.pods.bengine.image.convert.ImageConverter;
 import com.tinify.Options;
 import com.tinify.Tinify;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -29,22 +31,24 @@ import static java.util.stream.Collectors.toMap;
 @RequestMapping("/images")
 public class ImageController {
 
-    private static final String JPG_FILE_EXT = ".jpg";
-
     private final GithubService githubService;
+    private final ImageConverter imageConverter;
 
-    public ImageController(GithubService githubService) {
+    public ImageController(GithubService githubService, ImageConverter imageConverter) {
         this.githubService = githubService;
+        this.imageConverter = imageConverter;
     }
 
     @PostMapping
     public List<String> uploadImages(@RequestParam String owner, @RequestParam(name = "repo") String repoName,
                                      @RequestParam(defaultValue = "CONTENT") ResizingMode resizingMode,
                                      @RequestParam MultipartFile[] images) {
+        //TODO add validation that all images have either jpeg or png media type
+
         String pathPrefix = resizingMode == ResizingMode.CONTENT ? getPathPrefix() : "";
         RepoData repoData = new RepoData(repoName, owner, "master", pathPrefix);
         return Stream.of(images)
-                .map(wrap(img -> new AbstractMap.SimpleEntry<>(getBasename(img), toJPG(img))))
+                .map(wrap(img -> new AbstractMap.SimpleEntry<>(getBasename(img), convertImage(img))))
                 .map(nameToBuf -> resize(resizingMode, nameToBuf))
                 .map(wrap(resizedImages -> githubService.store(repoData, resizedImages)))
                 .map(files -> String.join(",", files))
@@ -60,7 +64,11 @@ public class ImageController {
         return Objects.requireNonNull(image.getOriginalFilename()).split("\\.")[0];
     }
 
-    private ByteBuffer toJPG(MultipartFile img) throws IOException {
+    private ByteBuffer convertImage(MultipartFile img) throws IOException {
+        if (!MediaType.IMAGE_JPEG_VALUE.equals(img.getContentType())) {
+            return imageConverter.convertToJpg(img.getBytes());
+        }
+
         return ByteBuffer.wrap(img.getBytes());
     }
 
@@ -73,11 +81,11 @@ public class ImageController {
     private String toName(String basename, ImageSize size) {
         final String name = basename.toLowerCase().trim();
         if (size == ImageSize.LARGE) {
-            return name + JPG_FILE_EXT;
+            return name + ImageFormats.JPG.asFileExtension();
         }
 
         String heightRef = size.getHeight() != null ? "x" + size.getHeight() : "";
-        return name + "-" + size.getWidth() + heightRef + JPG_FILE_EXT;
+        return name + "-" + size.getWidth() + heightRef + ImageFormats.JPG.asFileExtension();
     }
 
     private ByteBuffer toResizedImage(ByteBuffer imageBuffer, ImageSize size) throws IOException {
