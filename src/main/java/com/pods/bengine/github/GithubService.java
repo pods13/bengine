@@ -6,6 +6,7 @@ import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GHTreeBuilder;
 import org.kohsuke.github.GitHub;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -24,39 +25,45 @@ public class GithubService {
         this.githubClient = githubClient;
     }
 
-    public Set<String> store(RepoData repoData, Map<String, ByteBuffer> nameToBuffer) throws IOException {
-        GHRepository repo = githubClient.getOrganization(repoData.getOwner()).getRepository(repoData.getName());
-        String masterTreeSha = repo
-                .getTreeRecursive(repoData.getBranch(), 1)
-                .getSha();
-        GHTreeBuilder ghTreeBuilder = repo.createTree()
-                .baseTree(masterTreeSha);
-        for (Map.Entry<String, ByteBuffer> entry : nameToBuffer.entrySet()) {
-            String pathToEntry = "";
-            if (repoData.getPathPrefix().isEmpty()) {
-                pathToEntry = entry.getKey();
-            } else {
-                pathToEntry = repoData.getPathPrefix() + "/" + entry.getKey();
-            }
-            ByteBuffer buffer = entry.getValue();
-            String sha = repo.createBlob()
-                    .binaryContent(buffer.array())
-                    .create()
+    @Transactional
+    public Set<String> store(RepoData repoData, Map<String, ByteBuffer> nameToBuffer) {
+        //TODO instead names set need to return Dtos
+        try {
+            GHRepository repo = githubClient.getOrganization(repoData.getOwner()).getRepository(repoData.getName());
+            String masterTreeSha = repo
+                    .getTreeRecursive(repoData.getBranch(), 1)
                     .getSha();
-            ghTreeBuilder
-                    .shaEntry(pathToEntry, sha, false);
-        }
-        String treeSha = ghTreeBuilder.create().getSha();
-        GHRef masterRef = repo.getRef("heads/" + repoData.getBranch());
-        String commitSha = repo.createCommit()
-                .message("Added new files")
-                .tree(treeSha)
-                .parent(masterRef.getObject().getSha())
-                .create()
-                .getSHA1();
+            GHTreeBuilder ghTreeBuilder = repo.createTree()
+                    .baseTree(masterTreeSha);
+            for (Map.Entry<String, ByteBuffer> entry : nameToBuffer.entrySet()) {
+                String pathToEntry = "";
+                if (repoData.getPathPrefix().isEmpty()) {
+                    pathToEntry = entry.getKey();
+                } else {
+                    pathToEntry = repoData.getPathPrefix() + "/" + entry.getKey();
+                }
+                ByteBuffer buffer = entry.getValue();
+                String sha = repo.createBlob()
+                        .binaryContent(buffer.array())
+                        .create()
+                        .getSha();
+                ghTreeBuilder
+                        .shaEntry(pathToEntry, sha, false);
+            }
+            String treeSha = ghTreeBuilder.create().getSha();
+            GHRef masterRef = repo.getRef("heads/" + repoData.getBranch());
+            String commitSha = repo.createCommit()
+                    .message("Added new files")
+                    .tree(treeSha)
+                    .parent(masterRef.getObject().getSha())
+                    .create()
+                    .getSHA1();
 
-        masterRef.updateTo(commitSha);
-        return nameToBuffer.keySet();
+            masterRef.updateTo(commitSha);
+            return nameToBuffer.keySet();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Map<String, ByteBuffer> getContent(String owner, String repoName, String path) throws IOException {

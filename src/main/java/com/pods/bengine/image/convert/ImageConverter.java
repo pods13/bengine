@@ -24,7 +24,7 @@ public class ImageConverter {
         newBufferedImage.createGraphics().drawImage(bufferedImage, 0, 0, Color.WHITE, null);
 
         ByteArrayOutputStream jpgImageOutputStream = new ByteArrayOutputStream();
-        ImageIO.write(newBufferedImage, ImageFormats.JPG.asFileExtension(), jpgImageOutputStream);
+        ImageIO.write(newBufferedImage, ImageFormats.JPG.toString(), jpgImageOutputStream);
         return ByteBuffer.wrap(jpgImageOutputStream.toByteArray());
     }
 }

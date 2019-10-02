@@ -14,7 +14,7 @@
 	<name>bengine</name>
 
 	<properties>
-		<java.version>1.9</java.version>
+		<java.version>1.11</java.version>
 		<version.trimou>2.5.0.Final</version.trimou>
 	</properties>
 
