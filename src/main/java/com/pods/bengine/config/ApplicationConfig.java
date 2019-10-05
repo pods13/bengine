@@ -2,6 +2,7 @@ package com.pods.bengine.config;
 
 import com.github.slugify.Slugify;
 import com.pods.bengine.config.batch.BatchConfig;
+import com.pods.bengine.config.cache.CacheConfig;
 import com.pods.bengine.config.security.SecurityConfig;
 import com.pods.bengine.content.generation.warframe.primes.template.helpers.NumberOfRelicsHelper;
 import com.pods.bengine.content.post.warframe.primes.PrimePost;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.trimou.engine.MustacheEngine;
 import org.trimou.engine.MustacheEngineBuilder;
 import org.trimou.engine.locator.ClassPathTemplateLocator;
@@ -26,7 +28,8 @@ import java.io.IOException;
 import java.util.Map;
 
 @Configuration
-@Import({BatchConfig.class, SecurityConfig.class})
+@EnableScheduling
+@Import({BatchConfig.class, SecurityConfig.class, CacheConfig.class})
 public class ApplicationConfig {
 
     private final Environment env;

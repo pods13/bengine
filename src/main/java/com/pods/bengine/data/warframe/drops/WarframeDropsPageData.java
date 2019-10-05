@@ -13,7 +13,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.Resource;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -43,10 +43,11 @@ public class WarframeDropsPageData {
     private static final String TR_TAG = "tr";
     private static final String TD_TAG = "td";
 
-    @Value("classpath:data/drops.html")
-    private Resource resourceFile;
+    private final String dropsPageUrl;
 
-    private Document pageData;
+    public WarframeDropsPageData(@Value("${DROPS_PAGE_URL}") String dropsPageUrl) {
+        this.dropsPageUrl = dropsPageUrl;
+    }
 
     @SuppressWarnings("ConstantConditions")
     public Set<Mission> getMissions() {
@@ -100,7 +101,7 @@ public class WarframeDropsPageData {
     }
 
     private Elements getTableRowsNearHeader(String headerId) {
-        Document dropsPage = parseDropsPage();
+        Document dropsPage = getDropsPage();
         Element header = dropsPage.getElementById(headerId);
         Element table = header.nextElementSibling();
         return table.select(TR_TAG);
@@ -141,7 +142,7 @@ public class WarframeDropsPageData {
 
             if (rotation != null) {
                 currentRotation = rotation;
-            } else if(rowText.contains("Completion")) {
+            } else if (rowText.contains("Completion")) {
                 stagePreName = rowText;
             } else if (rowText.contains("Stage")) {
                 currentStage = Objects.requireNonNull(currentBounty).getStages().stream()
@@ -194,7 +195,6 @@ public class WarframeDropsPageData {
         return relics;
     }
 
-
     private String formatRelicName(String text) {
         if (text.contains(RELIC_SIGN)) {
             return text.split(RELIC_SIGN)[0].trim();
@@ -202,9 +202,10 @@ public class WarframeDropsPageData {
         return text;
     }
 
-    public Document parseDropsPage() {
+    @Cacheable("pages")
+    public Document getDropsPage() {
         try {
-            return Jsoup.parse(resourceFile.getFile(), "utf-8");
+            return Jsoup.connect(dropsPageUrl).get();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

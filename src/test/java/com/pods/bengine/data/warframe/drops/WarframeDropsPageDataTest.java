@@ -32,7 +32,7 @@ public class WarframeDropsPageDataTest {
             URL resource = getClass().getClassLoader().getResource("data/drops.html");
             File file = new File(Objects.requireNonNull(resource).getPath());
             return Jsoup.parse(file, "utf-8");
-        }).when(dropsPageData).parseDropsPage();
+        }).when(dropsPageData).getDropsPage();
     }
 
     @Test
